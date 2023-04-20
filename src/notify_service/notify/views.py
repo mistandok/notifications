@@ -1,11 +1,16 @@
-from rest_framework.generics import GenericAPIView
+from django.http import JsonResponse, HttpRequest
+import abc
 
-from src.notify_service.notify.serializers import PersonalNotifySerializer
-from src.notify_service.notify.tasks import send_auth_message
+from serializers import PersonalNotifySerializer
+from tasks import treatment_api_data
 
-class CreatePersonalNotify(GenericAPIView):
-    serializer_class = PersonalNotifySerializer
 
-    def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+class EventValidator(abc.ABC):
+    def validate(self):
+        pass
+
+
+async def create_notify(request: HttpRequest):
+    # валидация
+    treatment_api_data.delay(data=request.POST)
+    return JsonResponse(status=201)

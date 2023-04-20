@@ -9,6 +9,7 @@ include(
     'components/database.py',
     'components/apps.py',
     'components/middleware.py'
+    # 'components/mail.py'
 )
 
 BASE_DIR = Path(__file__).resolve().parent.parent

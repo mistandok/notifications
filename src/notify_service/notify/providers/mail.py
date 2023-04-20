@@ -2,7 +2,7 @@ import os
 
 from django.core.mail import send_mail
 
-from src.notify_service.notify.providers.provider import SenderProvider
+from notify.providers.provider import SenderProvider
 
 
 class MailProvider(SenderProvider):
