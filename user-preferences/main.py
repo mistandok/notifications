@@ -59,7 +59,7 @@ async def shutdown():
     await redis.redis.wait_closed()
 
 
-app.include_router(user_preferences_router, prefix='/preferences/api/v1/preferences', tags=['rating'])
+app.include_router(user_preferences_router, prefix='/preferences/api/v1/user-preferences', tags=['rating'])
 
 
 if __name__ == '__main__':
