@@ -50,6 +50,9 @@ class Notify(TimeStampedModel):
     )
     error_text = models.TextField(verbose_name="Текст ошибки отправки")
     retry_count = models.IntegerField(verbose_name="Попыток отправки", default=0)
+    next_retry = models.DateTimeField(
+        verbose_name="Следующая попытка отправки", null=True, blank=True
+    )
 
     class Meta:
         verbose_name = "Уведомление"

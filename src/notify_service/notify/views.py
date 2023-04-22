@@ -7,7 +7,7 @@ from notify.tasks import treatment_api_data
 
 class EventValidator(abc.ABC):
     def validate(self, request: HttpRequest) -> bool:
-        if notify_type := NotifyType.objects.filter(slug__iexact=request.POST.get("event_type")).first():
+        if notify_type := NotifyType.objects.filter(slug__iexact=request.POST.get("event_type")).afirst():
             return True
         else:
             return False

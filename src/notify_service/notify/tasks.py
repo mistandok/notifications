@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 import requests
 from django.utils import timezone
 
@@ -12,6 +14,8 @@ def treatment_api_data(data: dict):
     """Обрабатывает данные от апи"""
     new_notify: Notify = Notify.objects.create(content=data)
     if notify_type := NotifyType.objects.filter(slug=data.get("notify_type")):
+        new_notify.notify_type = notify_type
+        new_notify.save()
         if not notify_type.template:
             new_notify.error_text = (
                 f"У типа уведомлений {notify_type.name} не задан шаблон"
@@ -39,10 +43,14 @@ def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: i
         new_notify.save()
     new_notify.status = Notify.StatusType.SENDED
     new_notify.save()
+
+
 @app.task
 def collect_periodic_mailing():
     for mailing in Mailing.objects.filter(next_send__lte=timezone.now()):
-        new_notify=Notify.objects.create()
+        new_notify = Notify.objects.create(notify_type=mailing.notify_type)
+        collect_group_data.delay(new_notify.id)
+
 
 @app.task
 def collect_person_data(data: dict, notify_id: int):
@@ -63,9 +71,29 @@ def collect_person_data(data: dict, notify_id: int):
 
 
 @app.task
-def collect_group_data(data: dict):
+def collect_group_data(notify_id: int):
     """Собирает данные для групповой рассылки"""
+    new_notify = Notify.objects.get(id=notify_id)
+    new_notify.status = Notify.StatusType.SENDING
+    new_notify.save()
     pass
+
+
+@app.task
+def retry_error_mailing():
+    for notify in Notify.objects.filter(
+        status=Notify.StatusType.ERROR,
+        retry_count__lt=10,
+        next_retry__lte=timezone.now(),
+    ):
+        notify.retry_count += 1
+        notify.next_retry += timedelta(minutes=notify.retry_count * 2)
+        notify.save()
+        if notify.notify_type.group:
+            # нет смысла сохранять данные с прошлой попытки, т.к они потеряют консистентность
+            collect_group_data.delay(notify_id=notify.id)
+        else:
+            collect_person_data.delay(data=notify.content, notify_id=notify.id)
 
 
 def get_user_prefs(user_ids: list, notify_id: int) -> list | None:
@@ -96,7 +124,8 @@ def get_user_prefs(user_ids: list, notify_id: int) -> list | None:
         new_notify.save()
         return None
 
-#TODO переделать после того доделают
+
+# TODO переделать после того доделают
 def get_user_data(user_ids: list, notify_id: int) -> list | None:
     new_notify = Notify.objects.get(id=notify_id)
     if settings.AUTH_SERVICE_URL and settings.AUTH_SERVICE_TOKEN:
