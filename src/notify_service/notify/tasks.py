@@ -1,8 +1,9 @@
 import requests
+from django.utils import timezone
 
 from config import settings
 from config.celery import app
-from notify.models import Notify, NotifyType
+from notify.models import Notify, NotifyType, Mailing
 from notify.providers.provider import SenderProvider
 
 
@@ -38,7 +39,10 @@ def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: i
         new_notify.save()
     new_notify.status = Notify.StatusType.SENDED
     new_notify.save()
-
+@app.task
+def collect_periodic_mailing():
+    for mailing in Mailing.objects.filter(next_send__lte=timezone.now()):
+        new_notify=Notify.objects.create()
 
 @app.task
 def collect_person_data(data: dict, notify_id: int):
@@ -92,7 +96,7 @@ def get_user_prefs(user_ids: list, notify_id: int) -> list | None:
         new_notify.save()
         return None
 
-
+#TODO переделать после того доделают
 def get_user_data(user_ids: list, notify_id: int) -> list | None:
     new_notify = Notify.objects.get(id=notify_id)
     if settings.AUTH_SERVICE_URL and settings.AUTH_SERVICE_TOKEN:

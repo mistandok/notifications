@@ -1,16 +1,22 @@
 from django.http import JsonResponse, HttpRequest
 import abc
 
-from serializers import PersonalNotifySerializer
-from tasks import treatment_api_data
+from notify.models import NotifyType
+from notify.tasks import treatment_api_data
 
 
 class EventValidator(abc.ABC):
-    def validate(self):
-        pass
+    def validate(self, request: HttpRequest) -> bool:
+        if notify_type := NotifyType.objects.filter(slug__iexact=request.POST.get("event_type")).first():
+            return True
+        else:
+            return False
 
 
 async def create_notify(request: HttpRequest):
-    # валидация
-    treatment_api_data.delay(data=request.POST)
-    return JsonResponse(status=201)
+    validator = EventValidator()
+    if validator.validate(request):
+        treatment_api_data.delay(data=request.POST)
+        return JsonResponse(data={}, status=201)
+    else:
+        return JsonResponse(data={}, status=400)
