@@ -43,6 +43,12 @@ class ProviderType(StrEnum):
     EMAIL = 'mail'
 
 
+class UserRole(StrEnum):
+    """Класс описывает пользовательские роли."""
+
+    ADMIN = 'admin'
+
+
 class Settings(BaseSettings):
 
     project_name: str = Field(..., env='PROJECT_NAME')

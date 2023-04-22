@@ -16,6 +16,7 @@ from src.services.user_preferences import UserPreferencesService, get_user_prefe
 user_preferences_router = APIRouter()
 
 jwt_bearer = JWTBearer()
+admin_jwt_bearer = JWTBearer(admin_required=True)
 
 
 @user_preferences_router.post(
@@ -90,6 +91,7 @@ async def get_user_preferences_list(
     user_ids: list[UUID | str] = Query(),
     only_with_events: bool = Query(default=False),
     user_preferences_service: UserPreferencesService = Depends(get_user_preferences_service),
+    _: HTTPTokenAuthorizationCredentials = Depends(admin_jwt_bearer),
 ) -> list[UserPreferences]:
     """
     Ручка позволяет получить информацию по предпочтениям для заданных пользовательских идентификаторов.
