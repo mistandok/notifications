@@ -1,8 +1,9 @@
 """Модуль содержит сервис для работы с user_preferences."""
 
 from functools import lru_cache
+from http import HTTPStatus
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from fastapi.encoders import jsonable_encoder
 
 from src.core.config import DatabaseName, CollectionName
@@ -65,6 +66,33 @@ class UserPreferencesService:
             result_id = await self._user_preferences.insert(new_user_preferences)
 
         return IdResponse(id=result_id)
+
+    async def drop_custom_user_preference(self, user_id: str, preferences: list[Preferences]):
+        """
+        Метод удаляет заданные пользовательские настройки.
+
+        Args:
+            user_id: идентификатор пользователя, для которого необходимо удалить пользовательские настройки.
+            preferences: пользовательские настройки, которые нужно удалить.
+        """
+        user_preferences = await self._user_preferences.get(dict(user_id=user_id))
+
+        if not user_preferences:
+            raise HTTPException(status_code=HTTPStatus.BAD_REQUEST, detail='Для пользователя настройки еще не заданы!')
+
+        current_preferences = user_preferences.preferences
+
+        is_need_update = False
+        for preference_for_delete in preferences:
+            try:
+                current_preferences.remove(preference_for_delete)
+                is_need_update = True
+            except ValueError:
+                continue
+
+        if is_need_update:
+            encoded_preferences = [jsonable_encoder(preference) for preference in current_preferences]
+            await self._user_preferences.update(dict(user_id=user_id), dict(preferences=encoded_preferences))
 
 
 @lru_cache()

@@ -1,12 +1,15 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 
 
 class Preferences(BaseModel):
     event_type: str
     provider: str
 
-    def __eq__(self, other: 'Preferences'):
-        return self.event_type == other.event_type
+    @validator('event_type', each_item=True)
+    def check_event_type_name(cls, value):
+        if value not in ('auth', 'email'):
+            raise ValueError(f'Некорректное событие! поддерживаемые события: {("auth", "email")}')
+        return value
 
 
 if __name__ == '__main__':

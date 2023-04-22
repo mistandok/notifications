@@ -1,7 +1,7 @@
 """Модуль содержит настройки для работы FastApi-приложения."""
 
 import os
-from enum import Enum
+from enum import Enum, StrEnum
 from logging import config as logging_config
 from functools import cached_property
 
@@ -28,6 +28,18 @@ class DatabaseName(Enum):
     """Класс определяет название баз данных для работы с mongo"""
 
     PREFERENCES = 'preferences'
+
+
+class EventType(StrEnum):
+    """Класс описывает доступные события."""
+
+    AUTH = 'auth'
+
+
+class ProviderType(StrEnum):
+    """Класс описывает доступные провайдеры."""
+
+    EMAIL = 'email'
 
 
 class Settings(BaseSettings):

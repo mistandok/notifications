@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, Query
 
 from src.models.auth_models import HTTPTokenAuthorizationCredentials
 from src.models.requests_body_models import UserPreferencesBody
-from src.models.response_models import IdResponse
+from src.models.response_models import IdResponse, Response
 from src.models.user_preferences import UserPreferences
 from src.services.auth_validation.bearer_tokens import JWTBearer
 from src.services.user_preferences import UserPreferencesService, get_user_preferences_service
@@ -40,6 +40,26 @@ async def upsert_user_preferences(
         user_id=user_id,
         preferences=body.preferences,
     )
+
+
+@user_preferences_router.patch(
+    '/',
+    response_model=Response,
+    summary='Удаляет заданные пользовательские уведомления.',
+    response_description='Сообщение.',
+    description='',
+)
+async def drop_custom_user_preference(
+    body: UserPreferencesBody,
+    user_preferences_service: UserPreferencesService = Depends(get_user_preferences_service),
+    credentials: HTTPTokenAuthorizationCredentials = Depends(jwt_bearer),
+):
+    user_id = credentials.payload.sub.user_id
+    await user_preferences_service.drop_custom_user_preference(
+        user_id=user_id,
+        preferences=body.preferences,
+    )
+    return Response(detail='Заданные пользовательские настройки успешно удалены!')
 
 
 @user_preferences_router.get(
