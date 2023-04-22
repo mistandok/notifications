@@ -16,7 +16,7 @@ jwt_bearer = JWTBearer()
 
 
 @user_preferences_router.post(
-    '/',
+    '/upsert',
     response_model=IdResponse,
     summary='Добавление пользовательских предпочтений для конкретного пользователя.',
     response_description='Идентификатор записи.',
@@ -43,7 +43,7 @@ async def upsert_user_preferences(
 
 
 @user_preferences_router.patch(
-    '/',
+    '/drop-preferences',
     response_model=Response,
     summary='Удаляет заданные пользовательские уведомления.',
     response_description='Сообщение.',
@@ -82,4 +82,4 @@ async def get_user_preferences_list(
         only_with_events: показывать только тех пользователей, которые подписаны хотябы на одно уведомление.
         user_preferences_service: сервис для рпбоы с пользовательскими предпочтениями.
     """
-    return []
+    return await user_preferences_service.get_user_preferences_list(user_ids, only_with_events)

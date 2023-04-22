@@ -34,12 +34,13 @@ class EventType(StrEnum):
     """Класс описывает доступные события."""
 
     AUTH = 'auth'
+    TOP_FILM = 'top_film'
 
 
 class ProviderType(StrEnum):
     """Класс описывает доступные провайдеры."""
 
-    EMAIL = 'email'
+    EMAIL = 'mail'
 
 
 class Settings(BaseSettings):
@@ -56,6 +57,15 @@ class Settings(BaseSettings):
 
     class Config:
         keep_untouched = (cached_property,)
+        env_file = project_env
+
+
+class SearchersSettings(BaseSettings):
+    """Класс настроек для поисковиков."""
+
+    limit_for_search_user_preferences: int = Field(..., env='LIMIT_FOR_SEARCH_UP')
+
+    class Config:
         env_file = project_env
 
 
@@ -88,5 +98,6 @@ class JWTSettings(BaseSettings):
 settings = Settings()
 mongodb_settings = MongoDBSettings()
 jwt_settings = JWTSettings()
+searchers_settings = SearchersSettings()
 
 logging_config.dictConfig(LOGGING)

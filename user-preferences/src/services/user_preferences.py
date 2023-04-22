@@ -12,6 +12,7 @@ from src.db.redis import get_redis
 from src.models.response_models import IdResponse
 from src.models.user_preferences import UserPreferences, Preferences
 from src.services.crud.factories import get_crud_object_by_client
+from src.services.searchers.factories import get_user_preferences_searcher_by_client
 from src.services.types import TStorageClient, CacheClient
 
 
@@ -25,7 +26,7 @@ class UserPreferencesService:
         _user_preferences: объект для CRUD-операций с хранилищем данных.
     """
 
-    __slots__ = ('cache_client', '_storage_client', '_user_preferences')
+    __slots__ = ('cache_client', '_storage_client', '_user_preferences', '_user_preferences_searcher')
 
     def __init__(self, storage_client: TStorageClient, cache_client: CacheClient):
         self.cache_client = cache_client
@@ -36,6 +37,7 @@ class UserPreferencesService:
             collection_name=CollectionName.USER_PREFERENCES.value,
             model=UserPreferences,
         )
+        self._user_preferences_searcher = get_user_preferences_searcher_by_client(storage_client)
 
     async def upsert_user_preferences(self, user_id: str, preferences: list[Preferences]) -> IdResponse:
         """
@@ -93,6 +95,13 @@ class UserPreferencesService:
         if is_need_update:
             encoded_preferences = [jsonable_encoder(preference) for preference in current_preferences]
             await self._user_preferences.update(dict(user_id=user_id), dict(preferences=encoded_preferences))
+
+    async def get_user_preferences_list(
+        self,
+        user_ids: list[str],
+        only_with_events: bool = False
+    ) -> list[UserPreferences]:
+        return await self._user_preferences_searcher.get(user_ids, only_with_events)
 
 
 @lru_cache()
