@@ -70,5 +70,5 @@ USER_PREFERENCES_SERVICE_TOKEN = os.environ.get(
 AUTH_SERVICE_URL = os.environ.get("USER_PREFERENCES_SERVICE_URL", "localhost:60000")
 AUTH_SERVICE_TOKEN = os.environ.get("USER_PREFERENCES_SERVICE_TOKEN", "token")
 
-
-CELERY_BEAT_SCHEDULER='django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = f'amqp://{os.getenv("RABBITMQ_DEFAULT_USER", "sampleproject")}:{os.getenv("RABBITMQ_DEFAULT_PASS", "sampleproject")}@rabbit:5672'
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"

@@ -1,0 +1,26 @@
+FROM python:3.11
+
+WORKDIR /opt/app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV UWSGI_PROCESSES 1
+ENV UWSGI_THREADS 16
+ENV UWSGI_HARAKIRI 240
+ENV DJANGO_SETTINGS_MODULE 'config.settings'
+
+COPY entrypoint.sh entrypoint.sh
+COPY requirements.txt requirements.txt
+
+RUN  mkdir -p /opt/app/static/ \
+     && mkdir -p /opt/app/media/ \
+     && pip install --upgrade pip \
+     && pip install -r requirements.txt
+
+RUN apt-get update
+COPY . .
+
+EXPOSE 8000
+
+RUN chmod +x entrypoint.sh
+ENTRYPOINT ["/opt/app/entrypoint.sh"]
