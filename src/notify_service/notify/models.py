@@ -56,7 +56,7 @@ class Notify(TimeStampedModel):
         verbose_name_plural = "Уведомления"
 
     def __str__(self):
-        return f"{self.notify_type.__str__()} {self.created_at}"
+        return f"{self.notify_type.__str__()}"
 
 
 class Mailing(TimeStampedModel):

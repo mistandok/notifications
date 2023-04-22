@@ -1,5 +1,7 @@
 import abc
 
+from notify.models import Notify
+
 
 class SenderProvider(abc.ABC):
     providers = None
@@ -9,7 +11,7 @@ class SenderProvider(abc.ABC):
     def provider_name(self):
         pass
 
-    def send(self, data: dict):
+    def send(self, data: dict, notify: Notify):
         pass
 
     @classmethod

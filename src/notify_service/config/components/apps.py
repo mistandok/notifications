@@ -8,6 +8,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'notify.apps.NotifyConfig',
+    'django_celery_beat',
 ]
 if settings.DEBUG:
     INSTALLED_APPS += [
