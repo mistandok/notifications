@@ -22,6 +22,13 @@ class NotifyType(TimeStampedModel):
         Template, verbose_name="Шаблон", on_delete=models.SET_NULL, null=True
     )
     group = models.BooleanField(verbose_name="Групповое событие", default=False)
+    auth_group = models.CharField(
+        verbose_name="Слаг группы пользователей",
+        help_text="Оставьте это поле пустым, если рассылка для всех пользователей",
+        max_length=255,
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         verbose_name = "Тип уведомления"
