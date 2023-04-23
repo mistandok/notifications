@@ -15,7 +15,7 @@ from notify.providers.provider import SenderProvider
 def treatment_api_data(data: dict):
     """Обрабатывает данные от апи"""
     new_notify: Notify = Notify.objects.create(content=data)
-    if notify_type := NotifyType.objects.filter(slug=data.get("notify_type")):
+    if notify_type := NotifyType.objects.filter(slug=data.get("notify_type")).first():
         new_notify.notify_type = notify_type
         new_notify.save()
         if not notify_type.template:
