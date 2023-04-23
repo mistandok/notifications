@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-ENV APP_DIR /opt/ugc_service/src
+ENV APP_DIR /opt/user-preferences/src
 
 ENV PYTHONPATH "${PYTHONPATH}:/opt"
 
@@ -23,4 +23,4 @@ COPY . $APP_DIR
 
 RUN chmod u+x $APP_DIR/start-fastapi.sh
 
-ENTRYPOINT ["/opt/ugc_service/src/start-fastapi.sh"]
+ENTRYPOINT ["/opt/user-preferences/src/start-fastapi.sh"]

@@ -12,7 +12,7 @@ from src.db import redis
 from src.db import mongodb
 
 description = """
-### API записи событий и контента пользователей.<br>
+### API для подписки и отписки плользователей на различные типы уведомлений.<br>
 """
 
 app = FastAPI(
@@ -20,12 +20,14 @@ app = FastAPI(
     version=settings.project_version,
     description=description,
     contact={
-        "name_1": "Антон",
-        "url_1": "https://github.com/mistandok",
-        "name_2": "Михаил",
-        "url_2": "https://github.com/Mikhail-Kushnerev",
-        "name_3": "Евгений",
-        "url_3": "https://github.com/ME-progr"
+        'name_1': 'Антон',
+        'url_1': 'https://github.com/mistandok',
+        'name_2': 'Михаил',
+        'url_2': 'https://github.com/Mikhail-Kushnerev',
+        'name_3': 'Евгений',
+        'url_3': 'https://github.com/ME-progr',
+        'name_4': 'Илья',
+        'url_4': 'https://github.com/Bexram',
     },
     docs_url='/api/openapi',
     openapi_url='/api/openapi.json',
@@ -47,6 +49,7 @@ async def startup():
             f'{mongodb_settings.mongos2_host}:{mongodb_settings.mongos2_port}',
         ],
         serverSelectionTimeoutMS=mongodb_settings.timeout_ms,
+        uuidRepresentation='standard',
     )
 
 
@@ -59,7 +62,7 @@ async def shutdown():
     await redis.redis.wait_closed()
 
 
-app.include_router(user_preferences_router, prefix='/preferences/api/v1/preferences', tags=['rating'])
+app.include_router(user_preferences_router, prefix='/preferences/api/v1/user-preferences', tags=['rating'])
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 """Модуль содержит настройки для работы FastApi-приложения."""
 
 import os
-from enum import Enum
+from enum import Enum, StrEnum
 from logging import config as logging_config
 from functools import cached_property
 
@@ -15,7 +15,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG_ENV = os.path.join(BASE_DIR, 'core', '.env.debug')
 PROD_ENV = os.path.join(BASE_DIR, 'core', '.env.prod')
 
-project_env = DEBUG_ENV
+project_env = PROD_ENV
 
 
 class CollectionName(Enum):
@@ -28,6 +28,25 @@ class DatabaseName(Enum):
     """Класс определяет название баз данных для работы с mongo"""
 
     PREFERENCES = 'preferences'
+
+
+class EventType(StrEnum):
+    """Класс описывает доступные события."""
+
+    AUTH = 'auth'
+    TOP_FILM = 'top_film'
+
+
+class ProviderType(StrEnum):
+    """Класс описывает доступные провайдеры."""
+
+    EMAIL = 'mail'
+
+
+class UserRole(StrEnum):
+    """Класс описывает пользовательские роли."""
+
+    ADMIN = 'admin'
 
 
 class Settings(BaseSettings):
@@ -44,6 +63,15 @@ class Settings(BaseSettings):
 
     class Config:
         keep_untouched = (cached_property,)
+        env_file = project_env
+
+
+class SearchersSettings(BaseSettings):
+    """Класс настроек для поисковиков."""
+
+    limit_for_search_user_preferences: int = Field(..., env='LIMIT_FOR_SEARCH_UP')
+
+    class Config:
         env_file = project_env
 
 
@@ -76,5 +104,6 @@ class JWTSettings(BaseSettings):
 settings = Settings()
 mongodb_settings = MongoDBSettings()
 jwt_settings = JWTSettings()
+searchers_settings = SearchersSettings()
 
 logging_config.dictConfig(LOGGING)
