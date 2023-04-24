@@ -3,14 +3,14 @@ services:
   postgres:
     image: postgres:14.4-alpine
     restart: always
-    env_file: ./src/notify_service/.env
+    env_file: notify_service/.env
     volumes:
       - ./data:/var/lib/postgresql/data1
     depends_on:
       - service
 
   service:
-    build: ./src/notify_service
+    build: notify_service
     volumes:
       - static_volume:/opt/app/static
       - media_volume:/opt/app/media
@@ -32,21 +32,21 @@ services:
       - "80:80"
   rabbit:
     image: rabbitmq:3.7-management
-    env_file: ./src/notify_service/.env
+    env_file: notify_service/.env
   celery_worker:
     command: bash -c "while !</dev/tcp/service/8000; do sleep 1; done; celery -A config worker -l debug"
     build:
-      context:  ./src/notify_service
+      context: notify_service
       dockerfile: Dockerfile-celery
-    env_file: ./src/notify_service/.env
+    env_file: notify_service/.env
     depends_on:
       - service
   celery_beat:
     command: bash -c "while !</dev/tcp/service/8000; do sleep 1; done; celery -A config beat -l debug"
     build:
-      context: ./src/notify_service
+      context: notify_service
       dockerfile: Dockerfile-celery
-    env_file: ./src/notify_service/.env
+    env_file: notify_service/.env
     depends_on:
       - service
 
