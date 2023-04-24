@@ -1,0 +1,338 @@
+<mxfile host="app.diagrams.net" modified="2023-04-16T18:59:39.053Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 YaBrowser/23.3.0.2317 Yowser/2.5 Safari/537.36" etag="RwOm7fQNiAPqLGOQppt5" version="21.1.8" type="device">
+  <diagram name="Страница 1" id="4W0lnKndRwxXOgLkZ_JF">
+    <mxGraphModel dx="2954" dy="2360" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="cib78Emd6-TMv1SOHwyl-2" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="735" y="170" width="320" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-4" value="Сервис notification" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="785" y="180" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-5" value="PostgreSQL" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="905" y="230" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-7" value="Async Django-API" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="791" y="242.5" width="74" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-9" value="Admin" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="1005" y="-30" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-15" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;API:&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;- для настройки&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;1) сохранение шаблонов&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;2) События&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;3) Настройка событий (по каким каналам могут отправляться)&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;4) настройка графика периодических событий&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;- для очереди:&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;1) Получение событий из внешних источников и&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;передача в брокер сообщений.&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" parent="1" vertex="1">
+          <mxGeometry x="1055" y="200" width="50" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-24" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="575" width="250" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-25" value="Сервис user-preference" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="95" y="585" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-26" value="MongoDB&lt;br&gt;(User preference)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="220" y="625" width="80" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-27" value="FastApi" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="635" width="74" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-28" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-27" target="cib78Emd6-TMv1SOHwyl-26" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="785" as="sourcePoint" />
+            <mxPoint x="450" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-29" value="Client" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
+          <mxGeometry x="10" y="310" width="30" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-30" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-29" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="390" y="460" as="sourcePoint" />
+            <mxPoint x="80" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-36" value="access-token" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="cib78Emd6-TMv1SOHwyl-30" vertex="1" connectable="0">
+          <mxGeometry x="-0.1225" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-31" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Сервис отвечает за&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;храненей&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;пользовательских&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color); background-color: initial;&quot;&gt;настроек для&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&lt;span style=&quot;border-color: var(--border-color); background-color: initial;&quot;&gt;подписки/отписки&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;на события&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="745" width="50" height="95" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-45" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="255" width="251" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-46" value="Сервис auth" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="95" y="265" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-47" value="&lt;br&gt;PostgreSQL (User-data)" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;align=center;" parent="1" vertex="1">
+          <mxGeometry x="220" y="292.5" width="80" height="85" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-48" value="Flask" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="110" y="315" width="74" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-49" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-48" target="cib78Emd6-TMv1SOHwyl-47" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="465" as="sourcePoint" />
+            <mxPoint x="450" y="415" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-50" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Сервис хранит данные&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;о пользователях&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;и производит их&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;аутентификацию&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;и авторизацию&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" parent="1" vertex="1">
+          <mxGeometry x="160" y="430" width="50" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-51" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" parent="1" target="cib78Emd6-TMv1SOHwyl-45" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="30" y="340" as="sourcePoint" />
+            <mxPoint x="100" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-102" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-50" target="cib78Emd6-TMv1SOHwyl-45" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="580" as="sourcePoint" />
+            <mxPoint x="460" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-103" value="" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-31" target="cib78Emd6-TMv1SOHwyl-24" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="580" as="sourcePoint" />
+            <mxPoint x="460" y="530" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-111" value="" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="460" y="910" width="310" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-112" value="worker example" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="570" y="915" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-114" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;API сервиса позволяет принимать&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;информацию о сгенеи&lt;span style=&quot;background-color: initial;&quot;&gt;рированых&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;событиях и позволяет осуществлять их&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;отправку в очередь сообщений.&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;В случае ошибки при генерации&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;уведомлений использовать&amp;nbsp;&lt;/div&gt;Dead Letter Queue.&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;&amp;nbsp;&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" parent="1" vertex="1">
+          <mxGeometry x="550" y="1360" width="50" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-125" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=-0.008;exitY=0.322;exitDx=0;exitDy=0;entryX=1;entryY=0.75;entryDx=0;entryDy=0;exitPerimeter=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-133" target="cib78Emd6-TMv1SOHwyl-24" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="500" y="1205" as="sourcePoint" />
+            <mxPoint x="410" y="740" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="400" y="1070" />
+              <mxPoint x="400" y="687" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-126" value="&lt;div style=&quot;text-align: justify;&quot;&gt;Запрос напрямую к базе или через АПИ?&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;1) Через АПИ правильно с точки зрения микросервисной&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;архитектуры, но сложнее с реализацией (данных может&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;быть очень много по группе пользователей, а возвращать&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;их все через один запрос - неправильно. То есть надо&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;на стороне WORKER предусмотреть обработку результатов&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;запроса в цикле, пока не обработаем все)&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;2) Через прямой запрос проще, потому что можем&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;считывать батчами. Но неправильно с точки зрения&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;text-align: justify;&quot;&gt;Микросервисной архитектуры.&lt;/div&gt;" style="edgeLabel;html=1;align=right;verticalAlign=middle;resizable=0;points=[];" parent="cib78Emd6-TMv1SOHwyl-125" vertex="1" connectable="0">
+          <mxGeometry x="0.1057" y="4" relative="1" as="geometry">
+            <mxPoint x="-26" y="77" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-127" value="" style="endArrow=classic;startArrow=classic;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.005;entryY=0.621;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-45" edge="1" target="cib78Emd6-TMv1SOHwyl-133">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="327.6470588235294" as="sourcePoint" />
+            <mxPoint x="500" y="1332" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="400" y="330" />
+              <mxPoint x="400" y="1070" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-133" value="" style="rounded=0;whiteSpace=wrap;html=1;dashed=1;" parent="1" vertex="1">
+          <mxGeometry x="510" y="954.5" width="215" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-134" value="Python-script" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="580.5" y="970" width="74" height="23" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-135" value="Получение необходимых данных из источников (пока сделаем только для пользовательской информации)" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="522.5" y="1152" width="190" height="59" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-136" value="Определене пользовательских настроек подписок на события, на основе группы или идентификатора пользователя к которой адресовано уведомление&amp;nbsp;" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="517.5" y="1012" width="200" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-137" value="Отправка по соответствующим каналам" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="557.5" y="1252" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-140" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-136" target="cib78Emd6-TMv1SOHwyl-135" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="440" y="1220" as="sourcePoint" />
+            <mxPoint x="490" y="1170" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-141" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" parent="1" source="cib78Emd6-TMv1SOHwyl-135" target="cib78Emd6-TMv1SOHwyl-137" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="1260" as="sourcePoint" />
+            <mxPoint x="830" y="1210" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="cib78Emd6-TMv1SOHwyl-144" value="&lt;b&gt;Может стоит объединить сервис пользовательских настроек уведомлений с auth?&amp;nbsp;&lt;/b&gt;&lt;br&gt;&lt;b&gt;Плюсы:&amp;nbsp;&lt;/b&gt;&lt;br&gt;будем делать запрос в одно место и сразу отбирать нужные данные по пользователям.&lt;br&gt;&lt;b&gt;Минусы:&amp;nbsp;&lt;/b&gt;&lt;br&gt;Пользователей очень много и если они постоянно будет подписываться и отписываться от уведомлений - то положат сервис аутентификации. Да и сервис аутентификации не хочется никаким образом привязывать к уведомлениям (потому что если изменятся каналы отправки, то надо будет править auth сервис, а этого лучше избежать)" style="rounded=0;whiteSpace=wrap;html=1;align=left;strokeColor=none;" parent="1" vertex="1">
+          <mxGeometry x="30" y="1070" width="260" height="260" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-3" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="390" width="350" height="250" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-4" value="Брокер сообщений" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="785" y="400" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-7" value="RabbitMQ" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="837.5" y="450" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-13" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cib78Emd6-TMv1SOHwyl-2" target="m3Fndc9K9ye0_kjLLIeD-3">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1260" y="590" as="sourcePoint" />
+            <mxPoint x="1270" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-19" value="Остальные сервисы" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="-30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-22" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-19" target="cib78Emd6-TMv1SOHwyl-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1220" y="540" as="sourcePoint" />
+            <mxPoint x="960" y="130" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="790" y="90" />
+              <mxPoint x="895" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-24" value="Посылают различные&lt;br&gt;&amp;nbsp;события" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="m3Fndc9K9ye0_kjLLIeD-22">
+          <mxGeometry x="-0.5905" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-26" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Распределенная очередь заданий&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Разные события будут помещаться в свою очередь,&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;что позволит масштабировать систему и&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;распределит нагрузку&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="460" width="50" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-30" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="cib78Emd6-TMv1SOHwyl-9" target="cib78Emd6-TMv1SOHwyl-2">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1220" y="450" as="sourcePoint" />
+            <mxPoint x="1270" y="400" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="1020" y="90" />
+              <mxPoint x="895" y="90" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-31" value="Создает шаблоны,&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;Настраивает периодические события&lt;br style=&quot;border-color: var(--border-color);&quot;&gt;&amp;nbsp;может инициировать события" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="m3Fndc9K9ye0_kjLLIeD-30">
+          <mxGeometry x="-0.5333" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-32" value="queue_1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="560" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-33" value="queue_2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="836" y="560" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-34" value="queue_n" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="560" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-35" value="..." style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="930" y="565" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-42" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="720" y="695" width="350" height="175" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-43" value="Celery workers" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="785" y="830" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-44" value="worker_1" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="725" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-45" value="worker_2" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="836" y="725" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-46" value="worker_n" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="980" y="725" width="80" height="25" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-47" value="..." style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="930" y="730" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-52" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-7" target="m3Fndc9K9ye0_kjLLIeD-32">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="120" y="620" as="sourcePoint" />
+            <mxPoint x="170" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-53" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-7" target="m3Fndc9K9ye0_kjLLIeD-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="903" y="520" as="sourcePoint" />
+            <mxPoint x="780" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-54" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-7" target="m3Fndc9K9ye0_kjLLIeD-34">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="903" y="520" as="sourcePoint" />
+            <mxPoint x="886" y="570" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-55" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-32" target="m3Fndc9K9ye0_kjLLIeD-44">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="710" as="sourcePoint" />
+            <mxPoint x="650" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-56" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-33" target="m3Fndc9K9ye0_kjLLIeD-45">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="780" y="595" as="sourcePoint" />
+            <mxPoint x="780" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-57" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-34" target="m3Fndc9K9ye0_kjLLIeD-46">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="886" y="595" as="sourcePoint" />
+            <mxPoint x="886" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-58" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;С помощью Celery обрабатываем очередь&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;из брокера сообщений.&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;На каждый тип очереди свой worker.&amp;nbsp;&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Это поможет без проблем масштабировать систему.&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Данные о пользователях можно кешировать в редисе,&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Также можно обновлять статусы задач.&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Помимо этого в celery можно настраивать периодичность выполнения&lt;/div&gt;&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;заданий&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="737.5" width="50" height="122.5" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-59" value="Redis" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="855" y="767.5" width="80" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-62" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;exitX=0;exitY=0.5;exitDx=0;exitDy=0;dashed=1;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-42" target="cib78Emd6-TMv1SOHwyl-111">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="552.5" y="840" as="sourcePoint" />
+            <mxPoint x="602.5" y="790" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-68" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.184;exitY=1.002;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="cib78Emd6-TMv1SOHwyl-111" target="cib78Emd6-TMv1SOHwyl-114">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="120" y="1020" as="sourcePoint" />
+            <mxPoint x="170" y="970" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-69" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="975" y="910" width="370" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-72" value="Sender" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="924.5" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-73" value="Email sender" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="995" y="980" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-74" value="Websocket sender" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1101" y="980" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-75" value="another sender" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="1245" y="980" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-76" value="..." style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;" vertex="1" parent="1">
+          <mxGeometry x="1195" y="985" width="40" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-77" value="" style="edgeStyle=segmentEdgeStyle;endArrow=classic;html=1;curved=0;rounded=0;endSize=8;startSize=8;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-42" target="m3Fndc9K9ye0_kjLLIeD-69">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="880" y="924.5" as="sourcePoint" />
+            <mxPoint x="930" y="874.5" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="895" y="890" />
+              <mxPoint x="1160" y="890" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-78" value="&lt;div style=&quot;border-color: var(--border-color);&quot;&gt;Отправка уведомлений по определенным каналам&lt;/div&gt;" style="strokeWidth=2;html=1;shape=mxgraph.flowchart.annotation_2;align=left;labelPosition=right;pointerEvents=1;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="1073.25" width="50" height="26.75" as="geometry" />
+        </mxCell>
+        <mxCell id="m3Fndc9K9ye0_kjLLIeD-79" value="" style="endArrow=none;html=1;rounded=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="m3Fndc9K9ye0_kjLLIeD-69" target="m3Fndc9K9ye0_kjLLIeD-78">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1143.5" y="1090" as="sourcePoint" />
+            <mxPoint x="1176.5" y="1169" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
