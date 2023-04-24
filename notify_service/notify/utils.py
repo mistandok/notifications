@@ -18,9 +18,8 @@ class EventValidator:
             return False
 
         if await NotifyType.objects.filter(slug__iexact=request.GET.get("event_type")).afirst():
-            if request.GET.get("group") == 'False':
-                if not await self.is_uuid_valid(request.GET.get("user_id")):
-                    return False
+            if request.GET.get("group") == 'False' and not await self.is_uuid_valid(request.GET.get("user_id")):
+                return False
 
             return True
         return False
@@ -40,9 +39,8 @@ class EventValidator:
         """Метод проверяет есть ли нужные параметры в `request`."""
 
         if request_data.get('event_type') and request_data.get('group') in ('True', 'False'):
-            if request_data.get('group') == 'False':
-                if not request_data.get('user_id'):
-                    return False
+            if request_data.get('group') == 'False' and not request_data.get('user_id'):
+                return False
 
             return True
         return False
