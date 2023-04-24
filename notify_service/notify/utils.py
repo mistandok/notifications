@@ -1,4 +1,5 @@
 """Модуль с вспомогательными объектами."""
+
 from uuid import UUID
 
 from django.http import HttpRequest
@@ -9,25 +10,23 @@ from .models import NotifyType
 
 class EventValidator:
     """Класс-валидатор для событий."""
-    def validate(self, request: HttpRequest) -> bool:
+
+    async def validate(self, request: HttpRequest) -> bool:
         """Метод валидирует данные из `request`."""
 
-        if not self._have_params(request.GET):
+        if not await self._have_params(request.GET):
             return False
 
-        if NotifyType.objects.filter(slug__iexact=request.GET.get("event_type")).first():
-
+        if await NotifyType.objects.filter(slug__iexact=request.GET.get("event_type")).afirst():
             if request.GET.get("group") == 'False':
-                if not self.is_uuid_valid(request.GET.get("user_id")):
+                if not await self.is_uuid_valid(request.GET.get("user_id")):
                     return False
 
             return True
-
-        else:
-            return False
+        return False
 
     @staticmethod
-    def is_uuid_valid(obj: str) -> bool:
+    async def is_uuid_valid(obj: str) -> bool:
         """Метод проверяет является ли переданный объект UUID-ом."""
 
         try:
@@ -37,10 +36,13 @@ class EventValidator:
         return True
 
     @staticmethod
-    def _have_params(request_data: QueryDict) -> bool:
+    async def _have_params(request_data: QueryDict) -> bool:
         """Метод проверяет есть ли нужные параметры в `request`."""
 
-        if (request_data.get('event_type') and request_data.get('user_id')
-                and request_data.get('group') in ('True', 'False')):
+        if request_data.get('event_type') and request_data.get('group') in ('True', 'False'):
+            if request_data.get('group') == 'False':
+                if not request_data.get('user_id'):
+                    return False
+
             return True
         return False
