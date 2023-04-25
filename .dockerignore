@@ -20,7 +20,7 @@ coverage.xml
 *.log
 .git
 .idea
-.env
+docker_app/config/notify_service/.env.prod
 .mypy_cache
 .pytest_cache
 .hypothesis
