@@ -83,29 +83,29 @@ def collect_person_data(data: dict, notify_id: int):
 
 @app.task
 def collect_group_data(notify_id: int):
-    """Собирает данные для групповой рассылки"""
     new_notify = Notify.objects.get(id=notify_id)
     new_notify.status = Notify.StatusType.SENDING
     new_notify.save()
-    for users_data_bath in get_user_data(notify_id=notify_id):
-        user_ids = []
-        [user_ids.append(user.get("id")) for user in users_data_bath]
-        for user_pref_batch in get_user_prefs(user_ids, notify_id):
-            for user_pref in user_pref_batch:
-                for notify_type in user_pref.get("preferences"):
-                    if notify_type.get("event_type") == new_notify.notify_type.slug:
-                        send_message.delay(
-                            notify_data=new_notify.content,
-                            user_data=next(
-                                filter(
-                                    lambda d: d.get("id") == user_pref.get("user_id"),
-                                    users_data_bath,
-                                ),
-                                None,
-                            ),
-                            provider=notify_type.get("provider"),
-                            notify_id=notify_id,
-                        )
+
+    for user_data_batch in get_user_data(notify_id=notify_id):
+        users_info = {user_data.get("id"): user_data for user_data in user_data_batch}
+        user_ids = list(users_info.keys())
+
+        for user_prefs_batch in get_user_prefs(user_ids, notify_id):
+            for user_pref in user_prefs_batch:
+                user_id = user_pref.get("user_id")
+                preferences = user_pref.get("preferences")
+
+                for notify_type in preferences:
+                    if notify_type.get("event_type") != new_notify.notify_type.slug:
+                        continue
+
+                    send_message.delay(
+                        notify_data=new_notify.content,
+                        user_data=users_info.get(user_id),
+                        provider=notify_type.get("provider"),
+                        notify_id=notify_id,
+                    )
 
 
 @app.task
@@ -162,23 +162,33 @@ def get_user_prefs(user_ids: list, notify_id: int) -> Generator:
         raise Exception("Не задан адрес или токен сервиса настроек")
 
 
-# TODO переделать после того доделают
 def get_user_data(notify_id: int, user_id: list | None = None) -> Generator:
     new_notify = Notify.objects.get(id=notify_id)
+
     if settings.AUTH_SERVICE_URL and settings.AUTH_SERVICE_TOKEN:
-        response = requests.get(
-            settings.AUTH_SERVICE_URL + "/preferences/api/v1/user-preferences/list",
-            headers={"Authorization": "Bearer " + settings.AUTH_SERVICE_TOKEN},
-        )
-        if response.status_code == 200:
-            return response.json()
-        else:
-            new_notify.error_text = f"{response.status_code}: {response.text}"
-            new_notify.status = Notify.StatusType.ERROR
-            new_notify.save()
-            return None
+        page_number = 1
+        while True:
+            url = f"{settings.AUTH_SERVICE_URL}/auth/api/v1/users/user-infos?page_number={page_number}&limit=50"
+            if user_id:
+                url += f"&user_ids={user_id}"
+            else:
+                url += f"&user_groups=[{new_notify.notify_type.auth_group}]"
+            response = requests.get(
+                url=url,
+                headers={"Authorization": "Bearer " + settings.AUTH_SERVICE_TOKEN},
+            )
+            page_number += 1
+            if response.status_code == HTTPStatus.OK:
+                yield response.json().get("result")
+            if not response.json().get("outcome")[0].get("next_page"):
+                break
+            else:
+                new_notify.error_text = f"{response.status_code}: {response.text}"
+                new_notify.status = Notify.StatusType.ERROR
+                new_notify.save()
+                break
     else:
         new_notify.error_text = f"Не задан адрес или токен сервиса авторизации"
         new_notify.status = Notify.StatusType.ERROR
         new_notify.save()
-        return None
+        raise Exception("Не задан адрес или токен сервиса авторизации")
