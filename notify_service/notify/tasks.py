@@ -8,7 +8,7 @@ from django.utils import timezone
 from config import settings
 from config.celery import app
 from notify.models import Notify, NotifyType, Mailing
-from notify.providers.provider import SenderProvider
+from notify.providers.provider import SenderProvider, get_sender_by_provider
 
 
 @app.task
@@ -25,9 +25,9 @@ def treatment_api_data(data: dict):
             new_notify.status = Notify.StatusType.ERROR
         else:
             if notify_type.group:
-                collect_group_data.delay(new_notify.id)
+                collect_group_data(new_notify.id)
             else:
-                collect_person_data.delay(data, new_notify.id)
+                collect_person_data(data, new_notify.id)
     else:
         new_notify.error_text = f"Не существует тип уведомлений {notify_type.name}"
         new_notify.status = Notify.StatusType.ERROR
@@ -39,22 +39,24 @@ def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: i
     """Выбирает провайдера и отправляет уведомление через него"""
     new_notify = Notify.objects.get(id=notify_id)
     try:
-        provider = SenderProvider.get_provider(provider)
-        notify_data |= user_data
-        provider.send(notify_data, new_notify)
+        if notify_data:
+            user_data = notify_data | user_data
+        sender = get_sender_by_provider("mail")
+        sender.send(user_data, new_notify)
     except Exception as e:
         new_notify.error_text = str(e)
         new_notify.status = Notify.StatusType.ERROR
         new_notify.save()
-    new_notify.status = Notify.StatusType.SENDED
-    new_notify.save()
+    else:
+        new_notify.status = Notify.StatusType.SENDED
+        new_notify.save()
 
 
 @app.task
 def collect_periodic_mailing():
     for mailing in Mailing.objects.filter(next_send__lte=timezone.now()):
         new_notify = Notify.objects.create(notify_type=mailing.notify_type)
-        collect_group_data.delay(new_notify.id)
+        collect_group_data(new_notify.id)
 
 
 @app.task
@@ -73,7 +75,7 @@ def collect_person_data(data: dict, notify_id: int):
         if notify_type.get("event_type") == data.get("notify_type"):
             providers.append(notify_type.get("provider"))
     for provider in providers:
-        send_message.delay(
+        send_message(
             notify_data=data,
             user_data=user_data,
             provider=provider,
@@ -100,7 +102,7 @@ def collect_group_data(notify_id: int):
                     if notify_type.get("event_type") != new_notify.notify_type.slug:
                         continue
 
-                    send_message.delay(
+                    send_message(
                         notify_data=new_notify.content,
                         user_data=users_info.get(user_id),
                         provider=notify_type.get("provider"),
@@ -120,9 +122,9 @@ def retry_error_mailing():
         notify.save()
         if notify.notify_type.group:
             # нет смысла сохранять данные с прошлой попытки, т.к они потеряют консистентность
-            collect_group_data.delay(notify_id=notify.id)
+            collect_group_data(notify_id=notify.id)
         else:
-            collect_person_data.delay(data=notify.content, notify_id=notify.id)
+            collect_person_data(data=notify.content, notify_id=notify.id)
 
 
 def get_user_prefs(user_ids: list, notify_id: int) -> Generator:
@@ -136,8 +138,10 @@ def get_user_prefs(user_ids: list, notify_id: int) -> Generator:
         while counter < len(user_ids):
             url = (
                 f"{settings.USER_PREFERENCES_SERVICE_URL}/preferences/api/v1/user-preferences/list"
-                f"?only_with_events=True&user_ids={user_ids[counter:counter+limit-1]}"
+                f"?only_with_events=True"
             )
+            for id in user_ids[counter : counter + limit - 1]:
+                url += f"&user_ids={id}"
             counter += limit
             response = requests.get(
                 url=url,
@@ -171,8 +175,8 @@ def get_user_data(notify_id: int, user_id: list | None = None) -> Generator:
             url = f"{settings.AUTH_SERVICE_URL}/auth/api/v1/users/user-infos?page_number={page_number}&limit=50"
             if user_id:
                 url += f"&user_ids={user_id}"
-            else:
-                url += f"&user_groups=[{new_notify.notify_type.auth_group}]"
+            elif new_notify.notify_type.auth_group:
+                url += f"&user_groups={new_notify.notify_type.auth_group}"
             response = requests.get(
                 url=url,
                 headers={"Authorization": "Bearer " + settings.AUTH_SERVICE_TOKEN},
@@ -180,8 +184,8 @@ def get_user_data(notify_id: int, user_id: list | None = None) -> Generator:
             page_number += 1
             if response.status_code == HTTPStatus.OK:
                 yield response.json().get("result")
-            if not response.json().get("outcome")[0].get("next_page"):
-                break
+                if not response.json().get("outcome")[0].get("next_page"):
+                    break
             else:
                 new_notify.error_text = f"{response.status_code}: {response.text}"
                 new_notify.status = Notify.StatusType.ERROR
