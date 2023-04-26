@@ -25,9 +25,9 @@ def treatment_api_data(data: dict):
             new_notify.status = Notify.StatusType.ERROR
         else:
             if notify_type.group:
-                collect_group_data(new_notify.id)
+                collect_group_data.delay(new_notify.id)
             else:
-                collect_person_data(data, new_notify.id)
+                collect_person_data.delay(data, new_notify.id)
     else:
         new_notify.error_text = f"Не существует тип уведомлений {notify_type.name}"
         new_notify.status = Notify.StatusType.ERROR
@@ -56,7 +56,7 @@ def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: i
 def collect_periodic_mailing():
     for mailing in Mailing.objects.filter(next_send__lte=timezone.now()):
         new_notify = Notify.objects.create(notify_type=mailing.notify_type)
-        collect_group_data(new_notify.id)
+        collect_group_data.delay(new_notify.id)
 
 
 @app.task
@@ -75,7 +75,7 @@ def collect_person_data(data: dict, notify_id: int):
         if notify_type.get("event_type") == data.get("notify_type"):
             providers.append(notify_type.get("provider"))
     for provider in providers:
-        send_message(
+        send_message.delay(
             notify_data=data,
             user_data=user_data,
             provider=provider,
@@ -102,7 +102,7 @@ def collect_group_data(notify_id: int):
                     if notify_type.get("event_type") != new_notify.notify_type.slug:
                         continue
 
-                    send_message(
+                    send_message.delay(
                         notify_data=new_notify.content,
                         user_data=users_info.get(user_id),
                         provider=notify_type.get("provider"),
@@ -122,9 +122,9 @@ def retry_error_mailing():
         notify.save()
         if notify.notify_type.group:
             # нет смысла сохранять данные с прошлой попытки, т.к они потеряют консистентность
-            collect_group_data(notify_id=notify.id)
+            collect_group_data.delay(notify_id=notify.id)
         else:
-            collect_person_data(data=notify.content, notify_id=notify.id)
+            collect_person_data.delay(data=notify.content, notify_id=notify.id)
 
 
 def get_user_prefs(user_ids: list, notify_id: int) -> Generator:
