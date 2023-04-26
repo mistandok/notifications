@@ -47,12 +47,14 @@ USE_I18N = True
 
 USE_TZ = True
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 if not DEBUG:
-    STATIC_ROOT = "/opt/app/static/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-MEDIA_ROOT = "/opt/app/media/"
+MEDIA_URL = "/media/"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
