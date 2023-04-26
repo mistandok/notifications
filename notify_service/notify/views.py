@@ -11,8 +11,8 @@ async def create_notify(request: HttpRequest) -> HttpResponseBase:
 
     validator = EventValidator()
 
-    if await validator.validate(request):
-        treatment_api_data.delay(data=request.GET)
-        return HttpResponse('OK')
+    if (validate_result := await validator.validate(request)) == 'OK':
+        # treatment_api_data.delay(data=request.GET)
+        return HttpResponse(validate_result)
 
-    return HttpResponseBadRequest('BadRequest')
+    return HttpResponseBadRequest(validate_result)
