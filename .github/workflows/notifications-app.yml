@@ -55,6 +55,6 @@ jobs:
         if: ${{ steps.flake.result == 'success' }} and ${{ steps.mypy.result == 'success' }}
         uses: appleboy/telegram-action@master
         with:
-          to: '2136561108075061617'
+          to: '497456897'
           token: '5074303916:AAGMsu5Vrylqcb3fMtIaG09b_q0A6Mua4kA'
           message: Добавлен новый Pull Request!
