@@ -151,19 +151,123 @@ services:
       - mongos2
       - redis
     expose:
-      - "8101"
+      - 8101
+
+  auth_database:
+    image: postgres:13.0
+    restart: always
+    volumes:
+      - auth_postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./config/auth/.env.prod.db
+    command: -p 6432
+    expose:
+      - 6432
+
+  auth_service:
+    image: mikhailkushnerev/auth-service:v3.0.5
+    restart: always
+    depends_on:
+      - auth_database
+      - auth_redis
+      - refresh_auth_redis
+    env_file:
+      - ./config/auth/.env.prod
+    expose:
+      - 5100
+
+  auth_redis:
+    image: redis:latest
+    restart: always
+    command: --port 6381
+    expose:
+      - 6381
+    env_file:
+      - ./config/auth/.env.prod
+
+  refresh_auth_redis:
+    image: redis:latest
+    restart: always
+    command: --port 6380
+    expose:
+      - 6380
+    env_file:
+      - ./config/auth/.env.prod
+
+  rate_limit_redis:
+    image: redis:latest
+    restart: always
+    command: --port 6382
+    expose:
+      - 6382
+    env_file:
+      - ./config/auth/.env.prod
+
+  service:
+    build:
+      context: ../notify_service
+      dockerfile: Dockerfile
+    env_file:
+      - ./config/notify_service/.env.prod
+    volumes:
+      - static_volume:/opt/app/static
+      - media_volume:/opt/app/media
+    restart: always
+    depends_on:
+      - postgres
+    expose:
+      - 8000
+
+  postgres:
+    image: postgres:14.4-alpine
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - ./config/notify_service/.env.prod
+    expose:
+      - 5432
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 6831:6831/udp
+      - 16686:16686
+
+  rabbit:
+    image: rabbitmq:3.7-management
+    env_file: ./config/notify_service/.env.prod
+
+  celery_worker:
+    command: bash -c "while !</dev/tcp/service/8000; do sleep 1; done; celery -A config worker -l debug"
+    build:
+      context: ../notify_service
+      dockerfile: Dockerfile-celery
+    env_file: ./config/notify_service/.env.prod
+    depends_on:
+      - service
+
+  celery_beat:
+    command: bash -c "while !</dev/tcp/service/8000; do sleep 1; done; celery -A config beat -l debug"
+    build:
+      context: ../notify_service
+      dockerfile: Dockerfile-celery
+    env_file: ./config/notify_service/.env.prod
+    depends_on:
+      - service
 
   nginx:
     image: nginx:latest
     volumes:
       - ./etc/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./etc/nginx/configs:/etc/nginx/conf.d:ro
-      - static_volume:/opt/app/staticfiles
-      - media_volume:/opt/app/mediafiles
+      - static_volume:/opt/app/static
+      - media_volume:/opt/app/media
     environment:
       NGINX_SET_REAL_IPS_FROM: "[\"192.168.1.0/24\"]"
     depends_on:
       - user-preferences
+      - service
     ports:
       - 80:80
 
@@ -182,3 +286,6 @@ volumes:
 
   static_volume:
   media_volume:
+
+  auth_postgres_data:
+  postgres_data:
