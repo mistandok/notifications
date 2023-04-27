@@ -3,7 +3,6 @@
 from uuid import UUID
 
 from django.http import HttpRequest
-from django.http.request import QueryDict
 
 from .models import NotifyType
 
