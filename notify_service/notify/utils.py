@@ -3,7 +3,6 @@
 from uuid import UUID
 
 from django.http import HttpRequest
-from django.http.request import QueryDict
 
 from .models import NotifyType
 
@@ -14,13 +13,13 @@ class EventValidator:
     async def validate(self, request: HttpRequest) -> str:
         """Метод валидирует данные из `request`."""
 
-        if not request.GET.get("event_type"):
+        if not request.GET.get("notify_type"):
             return 'Не передан тип события!'
 
-        if (event_type_data :=
-                await NotifyType.objects.filter(slug__iexact=request.GET.get("event_type")).values().afirst()):
+        if (notify_type_data :=
+                await NotifyType.objects.filter(slug__iexact=request.GET.get("notify_type")).values().afirst()):
 
-            if not event_type_data.get('group'):
+            if not notify_type_data.get('group'):
                 if request.GET.get("user_id"):
                     if not await self.is_uuid_valid(request.GET.get("user_id")):
                         return 'Параметр user_id должен быть в формате UUID!'
