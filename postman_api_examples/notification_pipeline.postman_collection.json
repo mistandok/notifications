@@ -1,0 +1,229 @@
+{
+	"info": {
+		"_postman_id": "e0009025-93c4-4e7b-aace-bd0bdde0f989",
+		"name": "notification_pipeline",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "14261756"
+	},
+	"item": [
+		{
+			"name": "signup",
+			"request": {
+				"auth": {
+					"type": "bearer"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"logout-user\",\n    \"password\": \"password\",\n    \"email\": \"superuser@yandex.ru\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/signup",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"signup"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "User-Agent",
+						"value": "guest_pc",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"login\": \"logout-user\",\n    \"password\": \"password\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/login",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "refresh",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTY3NjgyMjA4MCwianRpIjoiNjU3MTE3NzktMmJiOS00ODg1LWEzYzAtODAwZGI0NmQzZTk0IiwidHlwZSI6InJlZnJlc2giLCJzdWIiOnsidXNlcl9pZCI6ImFkMzljZDY4LTMxMzEtNDg0My1iYTQyLWYyNTBlZGViNGNhYiIsInVzZXJfYWdlbnQiOiJndWVzdF9wYyJ9LCJuYmYiOjE2NzY4MjIwODAsImV4cCI6MTY3NzQyNjg4MH0.I5H5FV5wj_1_RAvgHCXuKSLK6REzOWMX_KCwAIgdFDA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "127.0.0.1/auth/api/v1/account/refresh",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"auth",
+						"api",
+						"v1",
+						"account",
+						"refresh"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create user preferences",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6dHJ1ZSwiaWF0IjoxNjgyNTQxMzM2LCJqdGkiOiI3ZDZkNDBlYy01ODk1LTQwMTEtOTJmMS1jM2JiM2QzNGMxN2IiLCJ0eXBlIjoiYWNjZXNzIiwic3ViIjp7InVzZXJfaWQiOiIzMTdkOGM1MC1kZWRiLTRlZTktOGMyMC02N2I2YmQwMWUxNDAiLCJ1c2VyX3JvbGVzIjpbImFkbWluIl0sInVzZXJfYWdlbnQiOiJndWVzdF9wYyIsInJlZnJlc2hfanRpIjoiMjk4MDk4MGEtNDhkMy00ZmRhLWIxMzktMjkzZGJiZGNhOTVmIn0sIm5iZiI6MTY4MjU0MTMzNn0.F5vQTFkOkIuSvD11XiwKq-lKi5oJhEMPEKfTUuOLlGU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"preferences\": [\n    {\n      \"event_type\": \"top_film\",\n      \"provider\": \"mail\"\n    },\n    {\n      \"event_type\": \"auth\",\n      \"provider\": \"mail\"\n    }\n  ]\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1/preferences/api/v1/user-preferences/upsert",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"preferences",
+						"api",
+						"v1",
+						"user-preferences",
+						"upsert"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create PERSONAL event in notify service",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1/notify/create/?event_type=auth&user_id=",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"notify",
+						"create",
+						""
+					],
+					"query": [
+						{
+							"key": "event_type",
+							"value": "auth"
+						},
+						{
+							"key": "user_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create GROUP event in notify service",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1/notify/create/?event_type=auth&user_id=",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"path": [
+						"notify",
+						"create",
+						""
+					],
+					"query": [
+						{
+							"key": "event_type",
+							"value": "auth"
+						},
+						{
+							"key": "user_id",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

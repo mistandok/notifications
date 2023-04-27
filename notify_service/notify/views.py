@@ -2,7 +2,7 @@
 
 from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpResponseBase
 
-from .utils import EventValidator
+from .validators import EventValidator
 from notify.tasks import treatment_api_data
 
 
