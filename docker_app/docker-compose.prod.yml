@@ -165,7 +165,7 @@ services:
       - 6432
 
   auth_service:
-    image: mikhailkushnerev/auth-service:v3.0.2
+    image: mikhailkushnerev/auth-service:v3.0.5
     restart: always
     depends_on:
       - auth_database
