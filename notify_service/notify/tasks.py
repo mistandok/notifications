@@ -1,14 +1,11 @@
 from datetime import timedelta
-from http import HTTPStatus
-from typing import Generator
 
-import requests
 from django.utils import timezone
 
-from config import settings
 from config.celery import app
 from notify.models import Notify, NotifyType, Mailing
-from notify.providers.provider import SenderProvider, get_sender_by_provider
+from notify.providers.provider import get_sender_by_provider
+from notify.searchers import get_personal_user_prefs, get_personal_user_data, get_user_data, get_user_prefs
 
 
 @app.task
@@ -18,7 +15,7 @@ def treatment_api_data(data: dict):
     главное нужны notify_type и user_id)
     """
     new_notify: Notify = Notify.objects.create(content=data)
-    if notify_type := NotifyType.objects.filter(slug=data.get("notify_type")).first():
+    if notify_type := NotifyType.objects.filter(slug=data.get("event_type")).first():
         new_notify.notify_type = notify_type
         new_notify.save()
         if not notify_type.template:
@@ -39,7 +36,8 @@ def treatment_api_data(data: dict):
 
 @app.task
 def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: int):
-    """Выбирает провайдера и отправляет уведомление через него
+    """
+    Выбирает провайдера и отправляет уведомление через него.
     @param notify_data: данные от уведомления
     @param user_data: данные пользователя
     @param provider: провайдер для отправки
@@ -52,7 +50,8 @@ def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: i
         sender = get_sender_by_provider(provider)
         sender.send(user_data, new_notify)
     except Exception as e:
-        new_notify.error_text = str(e)
+        error_text = 'Ошибка на стороне сервиса отправки сообщений: ' + str(e)
+        new_notify.error_text = error_text
         new_notify.status = Notify.StatusType.ERROR
         new_notify.save()
     else:
@@ -69,29 +68,31 @@ def collect_periodic_mailing():
 
 @app.task
 def collect_person_data(data: dict, notify_id: int):
-    """Собирает данные для персональной рассылки
+    """
+    Собирает данные для персональной рассылки.
     @param data: данные для сбора
     @param notify_id: id уведомления
     """
     new_notify = Notify.objects.get(id=notify_id)
     new_notify.status = Notify.StatusType.SENDING
     new_notify.save()
-    user_prefs = []
-    for batch in get_user_prefs([data.get("user_id")], notify_id):
-        user_prefs = batch[0].get("preferences")
-        break
-    providers = []
-    user_data = get_user_data([data.get("user_id")], notify_id)[0]
-    for notify_type in user_prefs:
-        if notify_type.get("event_type") == data.get("notify_type"):
-            providers.append(notify_type.get("provider"))
-    for provider in providers:
-        send_message.delay(
-            notify_data=data,
-            user_data=user_data,
-            provider=provider,
-            notify_id=notify_id,
-        )
+
+    current_user_id = data.get("user_id")
+    current_event_type = data.get('event_type')
+
+    user_prefs = get_personal_user_prefs(current_user_id, notify_id)
+    providers = [pref.get('provider') for pref in user_prefs if pref.get('event_type') == current_event_type]
+
+    if providers:
+        user_data = get_personal_user_data(current_user_id, notify_id)
+
+        for provider in providers:
+            send_message.delay(
+                notify_data=data,
+                user_data=user_data,
+                provider=provider,
+                notify_id=notify_id,
+            )
 
 
 @app.task
@@ -143,89 +144,3 @@ def retry_error_mailing():
             collect_group_data.delay(notify_id=notify.id)
         else:
             collect_person_data.delay(data=notify.content, notify_id=notify.id)
-
-
-def get_user_prefs(user_ids: list, notify_id: int) -> Generator:
-    """
-    Сбор данных из сервиса настроек
-    @param user_ids: id пользователей
-    @param notify_id: id уведомления
-    """
-    new_notify = Notify.objects.get(id=notify_id)
-    if not all((settings.AUTH_SERVICE_URL, settings.AUTH_SERVICE_TOKEN)):
-        new_notify.error_text = f"Не задан адрес или токен сервиса настроек"
-        new_notify.status = Notify.StatusType.ERROR
-        new_notify.save()
-        raise Exception("Не задан адрес или токен сервиса настроек")
-    counter = 0
-    limit = 50
-    while counter < len(user_ids):
-        url = (
-            f"{settings.USER_PREFERENCES_SERVICE_URL}/preferences/api/v1/user-preferences/list"
-            f"?only_with_events=True"
-        )
-        for id in user_ids[counter : counter + limit - 1]:
-            url += f"&user_ids={id}"
-        counter += limit
-        response = requests.get(
-            url=url,
-            headers={
-                "Authorization": "Bearer " + settings.USER_PREFERENCES_SERVICE_TOKEN
-            },
-        )
-        if response.status_code == HTTPStatus.OK:
-            response_json = response.json()
-            if len(response_json)==0:
-                new_notify.error_text = "Нету данных из сервиса настроек"
-                new_notify.status = Notify.StatusType.ERROR
-                new_notify.save()
-                raise Exception("Нету данных из сервиса настроек")
-            yield response.json()
-        else:
-            new_notify.error_text = (
-                f"user-prefs: {response.status_code}: {response.text}"
-            )
-            new_notify.status = Notify.StatusType.ERROR
-            new_notify.save()
-            raise Exception(f"user-prefs: {response.status_code}: {response.text}")
-
-
-def get_user_data(notify_id: int, user_id: list | None = None) -> Generator:
-    """
-    Собирает данные из сервиса авторизации
-    @param user_id: id пользователей
-    @param notify_id: id уведомления
-    """
-    new_notify = Notify.objects.get(id=notify_id)
-    if not all((settings.AUTH_SERVICE_URL, settings.AUTH_SERVICE_TOKEN)):
-        new_notify.error_text = f"Не задан адрес или токен сервиса настроек"
-        new_notify.status = Notify.StatusType.ERROR
-        new_notify.save()
-        raise Exception("Не задан адрес или токен сервиса настроек")
-    page_number = 1
-    while True:
-        url = f"{settings.AUTH_SERVICE_URL}/auth/api/v1/users/user-infos?page_number={page_number}&limit=50"
-        if user_id:
-            url += f"&user_ids={user_id}"
-        elif new_notify.notify_type.auth_group:
-            url += f"&user_groups={new_notify.notify_type.auth_group}"
-        response = requests.get(
-            url=url,
-            headers={"Authorization": "Bearer " + settings.AUTH_SERVICE_TOKEN},
-        )
-        page_number += 1
-        if response.status_code == HTTPStatus.OK:
-            respose_json = response.json()
-            if not respose_json.get("result"):
-                new_notify.error_text = "Нету данных из сервиса авторизации"
-                new_notify.status = Notify.StatusType.ERROR
-                new_notify.save()
-                raise Exception("Нету данных из сервиса авторизации")
-            yield respose_json.get("result")
-            if not respose_json.get("outcome")[0].get("next_page"):
-                break
-        else:
-            new_notify.error_text = f"auth: {response.status_code}: {response.text}"
-            new_notify.status = Notify.StatusType.ERROR
-            new_notify.save()
-            raise Exception(f"auth: {response.status_code}: {response.text}")
