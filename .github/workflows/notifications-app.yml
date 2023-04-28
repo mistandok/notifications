@@ -1,8 +1,6 @@
 name: Check pull requests
 
 on:
-  push:
-    branches: ["feature/m.kushnerev/ci-cd"]
   pull_request:
     branches: ["main"]
 
@@ -55,9 +53,9 @@ jobs:
         if: ${{ steps.flake.result == 'success' }} and ${{ steps.mypy.result == 'success' }}
         uses: appleboy/telegram-action@master
         with:
-          to: '497456897'
-          token: '5074303916:AAGMsu5Vrylqcb3fMtIaG09b_q0A6Mua4kA'
-          args: Repo ${{ github.repository }} commit ${{ github.sha }} on Python version ${{ matrix.python-version }} triggered successfully
+          to: ${{ TELEGRAM_CHAT_ID }}
+          token: ${{ TELEGRAM_BOT_ID }}
+          args: ${{ github.repository }} commit ${{ github.sha }} finished with successfully
 
       - name: Notify Failure In Telegram Channel
         if: failure()
@@ -65,4 +63,4 @@ jobs:
         with:
           to: ${{ secrets.chat }}
           token: ${{ secrets.token }}
-          args: Repo ${{ github.repository }} commit ${{ github.sha }} on Python version ${{ matrix.python-version }} triggered successfully
+          args: ${{ github.repository }} commit ${{ github.sha }} finished with error. ${{ steps.flake.outcome }} and ${{ steps.mypy.outcome }}
