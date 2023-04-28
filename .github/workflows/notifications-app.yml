@@ -57,4 +57,12 @@ jobs:
         with:
           to: '497456897'
           token: '5074303916:AAGMsu5Vrylqcb3fMtIaG09b_q0A6Mua4kA'
-          message: Добавлен новый Pull Request!
+          message: Success!
+
+      - name: Notify Failure In Telegram Channel
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.chat }}
+          token: ${{ secrets.token }}
+          args: Repo ${{ github.repository }} commit ${{ github.sha }} on Python version ${{ matrix.python-version }} triggered successfully
