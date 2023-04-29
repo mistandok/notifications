@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import timedelta
 
 from django.utils import timezone
@@ -5,7 +6,12 @@ from django.utils import timezone
 from config.celery import app
 from notify.models import Notify, NotifyType, Mailing
 from notify.providers.provider import get_sender_by_provider
-from notify.searchers import get_personal_user_prefs, get_personal_user_data, get_user_data, get_user_prefs
+from notify.searchers import (
+    get_personal_user_prefs,
+    get_personal_user_data,
+    get_user_data,
+    get_user_prefs,
+)
 
 
 @app.task
@@ -35,22 +41,24 @@ def treatment_api_data(data: dict):
 
 
 @app.task
-def send_message(notify_data: dict, user_data: dict, provider: str, notify_id: int):
+def send_message(users_data: list[dict], provider: str, notify_id: int):
     """
     Выбирает провайдера и отправляет уведомление через него.
-    @param notify_data: данные от уведомления
-    @param user_data: данные пользователя
+    @param users_data: данные пользователя формата
+        [
+          {'email': 'bexram33@mail.ru',
+           'surname': 'Ilya',
+           ...},
+        ...]
     @param provider: провайдер для отправки
     @param notify_id: id уведомления
     """
     new_notify = Notify.objects.get(id=notify_id)
     try:
-        if notify_data:
-            user_data = notify_data | user_data
         sender = get_sender_by_provider(provider)
-        sender.send(user_data, new_notify)
+        sender.send(users_data, new_notify)
     except Exception as e:
-        error_text = 'Ошибка на стороне сервиса отправки сообщений: ' + str(e)
+        error_text = "Ошибка на стороне сервиса отправки сообщений: " + str(e)
         new_notify.error_text = error_text
         new_notify.status = Notify.StatusType.ERROR
         new_notify.save()
@@ -78,20 +86,19 @@ def collect_person_data(data: dict, notify_id: int):
     new_notify.save()
 
     current_user_id = data.get("user_id")
-    current_event_type = data.get('event_type')
+    current_event_type = data.get("event_type")
 
     user_prefs = get_personal_user_prefs(current_user_id, notify_id)
-    providers = [pref.get('provider') for pref in user_prefs if pref.get('event_type') == current_event_type]
-
+    providers = [
+        pref.get("provider")
+        for pref in user_prefs
+        if pref.get("event_type") == current_event_type
+    ]
     if providers:
         user_data = get_personal_user_data(current_user_id, notify_id)
-
         for provider in providers:
             send_message.delay(
-                notify_data=data,
-                user_data=user_data,
-                provider=provider,
-                notify_id=notify_id,
+                users_data=[user_data], provider=provider, notify_id=new_notify.id
             )
 
 
@@ -104,7 +111,7 @@ def collect_group_data(notify_id: int):
     new_notify = Notify.objects.get(id=notify_id)
     new_notify.status = Notify.StatusType.SENDING
     new_notify.save()
-
+    messages_data = defaultdict(list)
     for user_data_batch in get_user_data(notify_id=notify_id):
         users_info = {user_data.get("id"): user_data for user_data in user_data_batch}
         user_ids = list(users_info.keys())
@@ -117,13 +124,13 @@ def collect_group_data(notify_id: int):
                 for notify_type in preferences:
                     if notify_type.get("event_type") != new_notify.notify_type.slug:
                         continue
-
-                    send_message.delay(
-                        notify_data=new_notify.content,
-                        user_data=users_info.get(user_id),
-                        provider=notify_type.get("provider"),
-                        notify_id=notify_id,
-                    )
+                    messages_data[notify_type.get("provider")].append(users_info.get(user_id))
+    for provider in messages_data.keys():
+        send_message.delay(
+            user_data=messages_data[provider],
+            provider=provider,
+            notify_id=notify_id,
+        )
 
 
 @app.task

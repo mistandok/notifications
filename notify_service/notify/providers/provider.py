@@ -2,6 +2,7 @@ import abc
 from functools import lru_cache
 
 from django.conf import settings
+from django.core.mail import get_connection, EmailMultiAlternatives
 
 from notify.models import Notify
 from django.core.mail import send_mail
@@ -22,7 +23,7 @@ class SenderProvider(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def send(self, data: dict, notify: Notify):
+    def send(self, data: list, notify: Notify):
         """
         Функция отправки уведомления
         @param data: данные для уведомления
@@ -36,20 +37,45 @@ class MailProvider(SenderProvider):
 
     provider_name = "mail"
 
-    def send(self, data: dict, notify: Notify):
+    def send(self, data: list, notify: Notify):
+        """
+        Формирует шаблоны для отправки и передает в отправку.
+        Устанавливает соединенеие с почтовым сервером и отправляет пачку сообщений.
+        @param data: Данные для отправки формата
+        [
+          {'email': 'bexram33@mail.ru',
+           'surname': 'Ilya',
+           ...},
+        ...]
+
+        @param notify: экземляр уведомления
+        """
         template = notify.notify_type.template.html
-        for key in data.keys():
-            if data.get(key):
-                template = template.replace(key, data.get(key))
-        plain_message = strip_tags(template)
-        send_mail(
-            subject=data.get("subject"),
-            message=plain_message,
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=[data.get("email")],
-            fail_silently=False,
-            html_message=template,
-        )
+        with  get_connection(
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                fail_silently=True,
+        ) as connection:
+            messages = []
+            for user in data:
+                user_template = template
+                for key, value in user.items():
+                    if value:
+                        user_template = user_template.replace(key, value)
+                plain_message = strip_tags(user_template)
+                message = EmailMultiAlternatives(
+                    notify.notify_type.name,
+                    plain_message,
+                    settings.EMAIL_HOST_USER,
+                    [
+                        user.get("email"),
+                    ],
+                )
+                message.attach_alternative(user_template, "text/html")
+                messages.append(message)
+            return connection.send_messages(messages)
+
+
 
 
 @lru_cache()
