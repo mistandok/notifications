@@ -2,6 +2,7 @@
 from http import HTTPStatus
 
 import jwt
+import pydantic.error_wrappers
 
 from fastapi import HTTPException, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -32,7 +33,10 @@ class JWTBearer(HTTPBearer):
         scheme, encoded_token = credentials.scheme, credentials.credentials
         token_payload = try_get_token_payload(encoded_token)
 
-        credentials = HTTPTokenAuthorizationCredentials(scheme=scheme, payload=token_payload)
+        try:
+            credentials = HTTPTokenAuthorizationCredentials(scheme=scheme, payload=token_payload)
+        except pydantic.error_wrappers.ValidationError:
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid token payload.")
 
         if self._admin_required:
             user_roles = credentials.payload.sub.user_roles
