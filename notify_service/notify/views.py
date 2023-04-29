@@ -4,6 +4,7 @@ from django.http import HttpRequest, HttpResponse, HttpResponseBadRequest, HttpR
 
 from .validators import EventValidator
 from notify.tasks import treatment_api_data
+from .constants import EventValidatorResponse
 
 
 async def create_notify(request: HttpRequest) -> HttpResponseBase:
@@ -11,7 +12,7 @@ async def create_notify(request: HttpRequest) -> HttpResponseBase:
 
     validator = EventValidator()
 
-    if (validate_result := await validator.validate(request)) == 'OK':
+    if (validate_result := await validator.validate(request)) == EventValidatorResponse.OK:
         treatment_api_data.delay(data=request.GET)
         return HttpResponse(validate_result)
 

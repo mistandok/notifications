@@ -5,12 +5,13 @@ from uuid import UUID
 from django.http import HttpRequest
 
 from .models import NotifyType
+from .constants import EventValidatorResponse
 
 
 class EventValidator:
     """Класс-валидатор для событий."""
 
-    async def validate(self, request: HttpRequest) -> str:
+    async def validate(self, request: HttpRequest) -> str | EventValidatorResponse:
         """Метод валидирует данные из `request`."""
 
         if not request.GET.get("event_type"):
@@ -23,10 +24,10 @@ class EventValidator:
                 if request.GET.get("user_id"):
                     if not await self.is_uuid_valid(request.GET.get("user_id")):
                         return 'Параметр user_id должен быть в формате UUID!'
-                    return 'OK'
+                    return EventValidatorResponse.OK
                 return 'Не передан идентификатор пользователя!'
 
-            return 'OK'
+            return EventValidatorResponse.OK
 
         return 'Такого типа события не существует!'
 
