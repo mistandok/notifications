@@ -43,17 +43,19 @@ def treatment_api_data(data: dict):
 def send_message(users_data: list, provider: str, notify_id: int):
     """
     Выбирает провайдера и отправляет уведомление через него.
-    @param notify_data: данные от уведомления
-    @param user_data: данные пользователя
+    @param users_data: данные пользователя формата
+        [
+          {'email': 'bexram33@mail.ru',
+           'surname': 'Ilya',
+           ...},
+        ...]
     @param provider: провайдер для отправки
     @param notify_id: id уведомления
     """
     new_notify = Notify.objects.get(id=notify_id)
     try:
-        if notify_data:
-            user_data = notify_data | user_data
         sender = get_sender_by_provider(provider)
-        sender.send(user_data, new_notify)
+        sender.send(users_data, new_notify)
     except Exception as e:
         error_text = "Ошибка на стороне сервиса отправки сообщений: " + str(e)
         new_notify.error_text = error_text

@@ -50,9 +50,7 @@ class MailProvider(SenderProvider):
         @param notify: экземляр уведомления
         """
         template = notify.notify_type.template.html
-        self.send_mass_html_mail(
-            data, notify.notify_type.name, template
-        )
+        self.send_mass_html_mail(data, notify.notify_type.name, template)
 
     def send_mass_html_mail(
         self,
@@ -79,14 +77,20 @@ class MailProvider(SenderProvider):
         )
         messages = []
         for user in datatuple:
+            user_template = template
             for key in user.keys():
                 if user.get(key):
-                    template = template.replace(key, user.get(key))
-            plain_message = strip_tags(template)
+                    user_template = user_template.replace(key, user.get(key))
+            plain_message = strip_tags(user_template)
             message = EmailMultiAlternatives(
-                subject, plain_message, settings.EMAIL_HOST_USER, user.get("email")
+                subject,
+                plain_message,
+                settings.EMAIL_HOST_USER,
+                [
+                    user.get("email"),
+                ],
             )
-            message.attach_alternative(template, "text/html")
+            message.attach_alternative(user_template, "text/html")
             messages.append(message)
         return connection.send_messages(messages)
 
