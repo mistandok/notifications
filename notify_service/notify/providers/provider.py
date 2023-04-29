@@ -40,6 +40,7 @@ class MailProvider(SenderProvider):
     def send(self, data: list, notify: Notify):
         """
         Формирует шаблоны для отправки и передает в отправку.
+        Устанавливает соединенеие с почтовым сервером и отправляет пачку сообщений.
         @param data: Данные для отправки формата
         [
           {'email': 'bexram33@mail.ru',
@@ -50,30 +51,10 @@ class MailProvider(SenderProvider):
         @param notify: экземляр уведомления
         """
         template = notify.notify_type.template.html
-        self.send_mass_html_mail(data, notify.notify_type.name, template)
-
-    def send_mass_html_mail(
-        self,
-        data: list,
-        subject: str,
-        template: str,
-    ):
-        """
-        Устанавливает соединенеие с почтовым сервером и отправляет пачку сообщений.
-        @param data: данные для отправки и рендера формата
-        [
-          {'email': 'bexram33@mail.ru',
-           'surname': 'Ilya',
-           ...},
-           ...]
-        @param subject: Тема для сообщения
-        @param template: Строка шаблона для ренедера
-        @return:
-        """
         with  get_connection(
-            username=settings.EMAIL_HOST_USER,
-            password=settings.EMAIL_HOST_PASSWORD,
-            fail_silently=True,
+                username=settings.EMAIL_HOST_USER,
+                password=settings.EMAIL_HOST_PASSWORD,
+                fail_silently=True,
         ) as connection:
             messages = []
             for user in data:
@@ -83,7 +64,7 @@ class MailProvider(SenderProvider):
                         user_template = user_template.replace(key, value)
                 plain_message = strip_tags(user_template)
                 message = EmailMultiAlternatives(
-                    subject,
+                    notify.notify_type.name,
                     plain_message,
                     settings.EMAIL_HOST_USER,
                     [
@@ -93,6 +74,8 @@ class MailProvider(SenderProvider):
                 message.attach_alternative(user_template, "text/html")
                 messages.append(message)
             return connection.send_messages(messages)
+
+
 
 
 @lru_cache()
