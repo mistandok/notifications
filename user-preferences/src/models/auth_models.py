@@ -20,7 +20,7 @@ class AccessTokenPayload(BaseModel):
     type: str
     sub: AccessTokenSub
     nbf: int
-    exp: int
+    exp: int | None
 
 
 class HTTPTokenAuthorizationCredentials(BaseModel):
