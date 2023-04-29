@@ -57,7 +57,6 @@ def try_get_token_payload(encoded_token: str) -> AccessTokenPayload:
             encoded_token,
             jwt_settings.secret_key.encode('utf-8'),
             algorithms=[jwt_settings.algorithm],
-            options=dict(verify_exp=False),
         )
     except jwt.PyJWTError:
         raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED, detail="Invalid or expired token.")

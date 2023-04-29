@@ -12,7 +12,7 @@ from .logger import LOGGING
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-DEBUG_ENV = os.path.join(BASE_DIR, 'core', '.env.prod.debug')
+DEBUG_ENV = os.path.join(BASE_DIR, 'core', '.env.debug')
 PROD_ENV = os.path.join(BASE_DIR, 'core', '.env.prod.prod')
 
 project_env = PROD_ENV
