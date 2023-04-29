@@ -1,3 +1,4 @@
+from ckeditor.fields import RichTextField
 from django.db import models
 
 from config.mixins import TimeStampedModel
@@ -5,7 +6,7 @@ from config.mixins import TimeStampedModel
 
 class Template(TimeStampedModel):
     name = models.CharField(verbose_name="Название шаблона", max_length=255, null=True)
-    html = models.TextField(verbose_name="HTML шаблон", null=True)
+    html = RichTextField(verbose_name="HTML шаблон", null=True)
 
     class Meta:
         verbose_name = "Шаблон"
