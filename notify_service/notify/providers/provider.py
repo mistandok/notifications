@@ -23,7 +23,7 @@ class SenderProvider(abc.ABC):
         pass
 
     @abc.abstractmethod
-    def send(self, data: dict, notify: Notify):
+    def send(self, data: list, notify: Notify):
         """
         Функция отправки уведомления
         @param data: данные для уведомления
@@ -54,13 +54,13 @@ class MailProvider(SenderProvider):
 
     def send_mass_html_mail(
         self,
-        datatuple,
+        data: list,
         subject: str,
         template: str,
     ):
         """
         Устанавливает соединенеие с почтовым сервером и отправляет пачку сообщений.
-        @param datatuple: данные для отправки и рендера формата
+        @param data: данные для отправки и рендера формата
         [
           {'email': 'bexram33@mail.ru',
            'surname': 'Ilya',
@@ -70,29 +70,29 @@ class MailProvider(SenderProvider):
         @param template: Строка шаблона для ренедера
         @return:
         """
-        connection = get_connection(
+        with  get_connection(
             username=settings.EMAIL_HOST_USER,
             password=settings.EMAIL_HOST_PASSWORD,
             fail_silently=True,
-        )
-        messages = []
-        for user in datatuple:
-            user_template = template
-            for key in user.keys():
-                if user.get(key):
-                    user_template = user_template.replace(key, user.get(key))
-            plain_message = strip_tags(user_template)
-            message = EmailMultiAlternatives(
-                subject,
-                plain_message,
-                settings.EMAIL_HOST_USER,
-                [
-                    user.get("email"),
-                ],
-            )
-            message.attach_alternative(user_template, "text/html")
-            messages.append(message)
-        return connection.send_messages(messages)
+        ) as connection:
+            messages = []
+            for user in data:
+                user_template = template
+                for key, value in user.items():
+                    if value:
+                        user_template = user_template.replace(key, value)
+                plain_message = strip_tags(user_template)
+                message = EmailMultiAlternatives(
+                    subject,
+                    plain_message,
+                    settings.EMAIL_HOST_USER,
+                    [
+                        user.get("email"),
+                    ],
+                )
+                message.attach_alternative(user_template, "text/html")
+                messages.append(message)
+            return connection.send_messages(messages)
 
 
 @lru_cache()

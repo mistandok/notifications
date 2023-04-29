@@ -1,3 +1,4 @@
+from collections import defaultdict
 from datetime import timedelta
 
 from django.utils import timezone
@@ -40,7 +41,7 @@ def treatment_api_data(data: dict):
 
 
 @app.task
-def send_message(users_data: list, provider: str, notify_id: int):
+def send_message(users_data: list[dict], provider: str, notify_id: int):
     """
     Выбирает провайдера и отправляет уведомление через него.
     @param users_data: данные пользователя формата
@@ -110,7 +111,7 @@ def collect_group_data(notify_id: int):
     new_notify = Notify.objects.get(id=notify_id)
     new_notify.status = Notify.StatusType.SENDING
     new_notify.save()
-    messages_data = {}
+    messages_data = defaultdict(list)
     for user_data_batch in get_user_data(notify_id=notify_id):
         users_info = {user_data.get("id"): user_data for user_data in user_data_batch}
         user_ids = list(users_info.keys())
@@ -123,14 +124,7 @@ def collect_group_data(notify_id: int):
                 for notify_type in preferences:
                     if notify_type.get("event_type") != new_notify.notify_type.slug:
                         continue
-                    if notify_type.get("provider") not in messages_data:
-                        messages_data[notify_type.get("provider")] = [
-                            users_info.get(user_id)
-                        ]
-                    else:
-                        messages_data[notify_type.get("provider")].append(
-                            users_info.get(user_id)
-                        )
+                    messages_data[notify_type.get("provider")].append(users_info.get(user_id))
     for provider in messages_data.keys():
         send_message.delay(
             user_data=messages_data[provider],
