@@ -4,7 +4,7 @@ services:
   redis:
     image: redis:latest
     command: --port 6378
-    ports:
+    expose:
       - "6378:6378"
 
   # Кластер MongoDB
@@ -13,10 +13,8 @@ services:
     container_name: mongors1n1
     image: mongo
     command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27017
-    ports:
-      - 27017:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors1n1_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -25,10 +23,8 @@ services:
     container_name: mongors1n2
     image: mongo
     command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27017
-    ports:
-      - 27027:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors1n2_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -37,10 +33,8 @@ services:
     container_name: mongors1n3
     image: mongo
     command: mongod --shardsvr --replSet mongors1 --dbpath /data/db --port 27017
-    ports:
-      - 27037:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors1n3_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -49,10 +43,8 @@ services:
     container_name: mongors2n1
     image: mongo
     command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27017
-    ports:
-      - 27047:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors2n1_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -61,10 +53,8 @@ services:
     container_name: mongors2n2
     image: mongo
     command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27017
-    ports:
-      - 27057:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors2n2_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -73,10 +63,8 @@ services:
     container_name: mongors2n3
     image: mongo
     command: mongod --shardsvr --replSet mongors2 --dbpath /data/db --port 27017
-    ports:
-      - 27067:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongors2n3_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -86,7 +74,7 @@ services:
     image: mongo
     command: mongod --configsvr --replSet mongors1conf --dbpath /data/db --port 27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongocfg1_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -96,7 +84,7 @@ services:
     image: mongo
     command: mongod --configsvr --replSet mongors1conf --dbpath /data/db --port 27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongocfg2_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -106,7 +94,7 @@ services:
     image: mongo
     command: mongod --configsvr --replSet mongors1conf --dbpath /data/db --port 27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - mongo_cluster_mongocfg3_db:/data/db
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
@@ -118,10 +106,8 @@ services:
       - mongocfg1
       - mongocfg2
     command: mongos --configdb mongors1conf/mongocfg1:27017,mongocfg2:27017,mongocfg3:27017 --port 27017 --bind_ip_all
-    ports:
-      - 27019:27017
     expose:
-      - "27017"
+      - 27017
     volumes:
       - ./config/user_preferences_fastapi_project/mongodb_config:/scripts
 
@@ -132,8 +118,6 @@ services:
       - mongocfg1
       - mongocfg2
     command: mongos --configdb mongors1conf/mongocfg1:27017,mongocfg2:27017,mongocfg3:27017 --port 27017 --bind_ip_all
-    ports:
-      - 27020:27017
     expose:
       - "27017"
     volumes:
