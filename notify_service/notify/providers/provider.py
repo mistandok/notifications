@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.mail import get_connection, EmailMultiAlternatives
 
 from notify.models import Notify
-from django.core.mail import send_mail
 from django.utils.html import strip_tags
 
 
@@ -51,17 +50,19 @@ class MailProvider(SenderProvider):
         @param notify: экземляр уведомления
         """
         template = notify.notify_type.template.html
-        with  get_connection(
-                username=settings.EMAIL_HOST_USER,
-                password=settings.EMAIL_HOST_PASSWORD,
-                fail_silently=True,
+        with get_connection(
+            username=settings.EMAIL_HOST_USER,
+            password=settings.EMAIL_HOST_PASSWORD,
+            fail_silently=True,
         ) as connection:
             messages = []
             for user in data:
                 user_template = template
+
                 for key, value in user.items():
                     if value:
                         user_template = user_template.replace(key, value)
+
                 plain_message = strip_tags(user_template)
                 message = EmailMultiAlternatives(
                     notify.notify_type.name,
@@ -73,9 +74,8 @@ class MailProvider(SenderProvider):
                 )
                 message.attach_alternative(user_template, "text/html")
                 messages.append(message)
+
             return connection.send_messages(messages)
-
-
 
 
 @lru_cache()
