@@ -212,12 +212,6 @@ services:
     expose:
       - 5432
 
-  jaeger:
-    image: jaegertracing/all-in-one:latest
-    ports:
-      - 6831:6831/udp
-      - 16686:16686
-
   rabbit:
     image: rabbitmq:3.7-management
     env_file: ./config/notify_service/.env.prod
