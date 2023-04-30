@@ -1,20 +1,23 @@
 """Модуль с вспомогательными объектами."""
 
 from uuid import UUID
+from collections import namedtuple
 
 from django.http import HttpRequest
 
 from .models import NotifyType
 
+EventValidatorResponse = namedtuple('EventValidatorResponse', ['status', 'detail'])
+
 
 class EventValidator:
     """Класс-валидатор для событий."""
 
-    async def validate(self, request: HttpRequest) -> str:
+    async def validate(self, request: HttpRequest) -> EventValidatorResponse:
         """Метод валидирует данные из `request`."""
 
         if not request.GET.get("event_type"):
-            return 'Не передан тип события!'
+            return EventValidatorResponse(status=False, detail='Не передан тип события!')
 
         if (event_type_data :=
                 await NotifyType.objects.filter(slug__iexact=request.GET.get("event_type")).values().afirst()):
@@ -22,13 +25,15 @@ class EventValidator:
             if not event_type_data.get('group'):
                 if request.GET.get("user_id"):
                     if not await self.is_uuid_valid(request.GET.get("user_id")):
-                        return 'Параметр user_id должен быть в формате UUID!'
-                    return 'OK'
-                return 'Не передан идентификатор пользователя!'
+                        return EventValidatorResponse(
+                            status=False, detail='Параметр user_id должен быть в формате UUID!'
+                        )
+                    return EventValidatorResponse(status=True, detail='')
+                return EventValidatorResponse(status=False, detail='Не передан идентификатор пользователя!')
 
-            return 'OK'
+            return EventValidatorResponse(status=True, detail='')
 
-        return 'Такого типа события не существует!'
+        return EventValidatorResponse(status=False, detail='Такого типа события не существует!')
 
     @staticmethod
     async def is_uuid_valid(obj: str) -> bool:
