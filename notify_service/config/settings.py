@@ -51,6 +51,7 @@ STATIC_URL = "/static/"
 
 if not DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, "static")
+    CKEDITOR_BASEPATH = "/static/ckeditor/ckeditor/"
 
 MEDIA_URL = "/media/"
 
@@ -74,7 +75,3 @@ AUTH_SERVICE_TOKEN = os.environ.get("AUTH_SERVICE_TOKEN", "token")
 
 CELERY_BROKER_URL = f'amqp://{os.getenv("RABBITMQ_DEFAULT_USER", "sampleproject")}:{os.getenv("RABBITMQ_DEFAULT_PASS", "sampleproject")}@rabbit:5672'
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
-
-
-if not DEBUG:
-    CKEDITOR_BASEPATH = os.path.join(BASE_DIR, "static/ckeditor/ckeditor/")
