@@ -21,8 +21,8 @@
 </details>
 
 ## Репозитории
-- [Сервис аутентификации](https://github.com/mistandok/Auth_sprint_1)
-- [Сервисы уведомлений и пользовательских предпочтений](https://github.com/mistandok/notifications_sprint_1)
+- [Сервис аутентификации](https://github.com/mistandok/auth_service)
+- [Сервисы уведомлений и пользовательских предпочтений](https://github.com/mistandok/notifications)
 
 
 ## Описание
